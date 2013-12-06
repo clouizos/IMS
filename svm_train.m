@@ -19,7 +19,22 @@ for i=1:4
     %labels((i-1)*50 + 1:(i-1)*50 + 50) = 1;
     s = ['training classifier ',int2str(i),'...' ];
     disp(s)
-    svmstruct_all{i} = svmtrain(features,labels,'kernel_function','rbf', 'rbf_sigma', 15);
+    
+    % cross validation - useful in order to estimate the value
+    % of the parameters of the kernel
+%     CV = cvpartition(labels, 'Kfold', 10);
+%     err = zeros(CV.NumTestSets);
+%     for i=1:CV.NumTestSets
+%         trIdx = CV.training(i);
+%         teIdx = CV.test(i);
+%         svmstr_test = svmtrain(features(trIdx,:), labels(trIdx,:), 'autoscale', false, 'method', 'QP', 'kernel_function', 'rbf', 'rbf_sigma', 1);
+%         res = svmclassify(svmstr_test, features(teIdx,:));
+% 
+%         err(i) = sum(-labels(teIdx,:) == res);
+%     end
+%     cvErr = sum(err)/sum(CV.TestSize)
+        
+    svmstruct_all{i} = svmtrain(features,labels, 'autoscale', false, 'method', 'QP', 'kernel_function','rbf', 'rbf_sigma', 1);
    
 end
 disp('training finished...')

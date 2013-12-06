@@ -1,8 +1,12 @@
-function features = estimate_features(num_samples, type)
+function features = estimate_features(num_samples, type, voc_size)
 close all;
-voc_size = 800;
+%voc_size = 400;
 % parse the vocabulary
-voc_ = load('visual_vocabulary_1000_800.mat');
+if voc_size == 400
+    voc_ = load('visual_vocabulary_1000_400.mat');
+elseif voc_size == 800
+    voc_ = load('visual_vocabulary_1000_800.mat');
+end
 % voc has integers here, need to investigate
 voc = voc_.voc';
 if strcmp(type,'train')
@@ -49,7 +53,7 @@ for i=ii
     % estimate the features from the vocabulary
     [d,I] = pdist2(voc, double(D_air'), 'euclidean', 'Smallest', 1);
     [elems, cent] = hist(I,size(voc,1));
-    features(count,:) = elems;
+    features(count,:) = elems/sum(sum(elems));
     count = count+1;
 end
 disp('finished for airplanes.')
@@ -66,7 +70,7 @@ for i=ii
         [F_car,D_car] = vl_sift(im_car);
         [d,I] = pdist2(voc, double(D_car'), 'euclidean', 'Smallest', 1);
         [elems, cent] = hist(I,size(voc,1));
-        features(count,:) = elems;
+        features(count,:) = elems/sum(sum(elems));
         count = count+1;
     catch err
         disp('maximum cars')
@@ -87,7 +91,7 @@ for i=ii
         [F_face,D_face] = vl_sift(im_face);
         [d,I] = pdist2(voc, double(D_face'), 'euclidean', 'Smallest', 1);
         [elems, cent] = hist(I,size(voc,1));
-        features(count,:) = elems;
+        features(count,:) = elems/sum(sum(elems));
         count = count+1;
     catch err
         disp('maximum faces')
@@ -107,7 +111,7 @@ for i=ii
     [F_motor,D_motor] = vl_sift(im_motor);
     [d,I] = pdist2(voc, double(D_motor'), 'euclidean', 'Smallest', 1);
     [elems, cent] = hist(I,size(voc,1));
-    features(count,:) = elems;
+    features(count,:) = elems/sum(sum(elems));
     count = count+1;
   
 end
