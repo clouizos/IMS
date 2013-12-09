@@ -6,12 +6,6 @@ car_train = './data/cars_train/';
 face_train = './data/faces_train/';
 motor_train = './data/motorbikes_train/';
 
-% % testing sets
-% air_test = './data/airplanes_test/';
-% car_test = './data/cars_test/';
-% face_test = './data/faces_test/';
-% motor_test = './data/motorbikes_test/';
-
 % get the filenames, same for every folder
 dirInfo = dir(air_train); 
 % remove directories

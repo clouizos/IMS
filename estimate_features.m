@@ -1,7 +1,10 @@
-function features = estimate_features(num_samples, type, voc_size)
+function features = estimate_features(num_samples, type, voc_size, reg, vis)
 close all;
 %voc_size = 400;
 % parse the vocabulary
+if nargin == 4
+    vis = 0;
+end
 if voc_size == 400
     voc_ = load('visual_vocabulary_1000_400.mat');
 elseif voc_size == 800
@@ -46,6 +49,11 @@ else
     ii = 1:num_samples;
 end
 
+% 1 = airplanes
+% 2 = cars
+% 3 = faces
+% 4 = motorbikes
+
 for i=ii
     count
     % airplane
@@ -58,8 +66,13 @@ for i=ii
     [F_air,D_air] = vl_sift(im_air);
     % estimate the features from the vocabulary
     [d,I] = pdist2(voc, double(D_air'), 'euclidean', 'Smallest', 1);
-    [elems, cent] = hist(I,size(voc,1));
-    features(count,:) = elems/sum(sum(elems));
+    [elems, cent] = hist(I,voc_size);
+    %features(count,:) = elems/sum(sum(elems));
+    features(count,:) = elems/norm(elems,reg);
+    if vis == 1
+        figure(1)
+        bar(cent, features(count,:))
+    end
     count = count+1;
 end
 disp('finished for airplanes.')
@@ -75,8 +88,13 @@ for i=ii
         end
         [F_car,D_car] = vl_sift(im_car);
         [d,I] = pdist2(voc, double(D_car'), 'euclidean', 'Smallest', 1);
-        [elems, cent] = hist(I,size(voc,1));
-        features(count,:) = elems/sum(sum(elems));
+        [elems, cent] = hist(I,voc_size);
+        %features(count,:) = elems/sum(sum(elems));
+        features(count,:) = elems/norm(elems,reg);
+        if vis == 1
+            figure(2)
+            bar(cent, features(count,:))
+        end
         count = count+1;
     catch err
         disp('maximum cars')
@@ -96,8 +114,13 @@ for i=ii
         end
         [F_face,D_face] = vl_sift(im_face);
         [d,I] = pdist2(voc, double(D_face'), 'euclidean', 'Smallest', 1);
-        [elems, cent] = hist(I,size(voc,1));
-        features(count,:) = elems/sum(sum(elems));
+        [elems, cent] = hist(I,voc_size);
+        %features(count,:) = elems/sum(sum(elems));
+        features(count,:) = elems/norm(elems,reg);
+        if vis == 1
+            figure(3)
+            bar(cent, features(count,:))
+        end
         count = count+1;
     catch err
         disp('maximum faces')
@@ -116,8 +139,14 @@ for i=ii
     end
     [F_motor,D_motor] = vl_sift(im_motor);
     [d,I] = pdist2(voc, double(D_motor'), 'euclidean', 'Smallest', 1);
-    [elems, cent] = hist(I,size(voc,1));
-    features(count,:) = elems/sum(sum(elems));
+    [elems, cent] = hist(I,voc_size);
+%     features(count,:) = elems/sum(sum(elems));
+    features(count,:) = elems/norm(elems,reg);
+    if vis == 1
+        figure(4)
+        bar(cent, features(count,:))
+    end
+%     features(count,end + 1) = 4;
     count = count+1;
   
 end
