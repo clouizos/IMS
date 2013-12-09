@@ -1,13 +1,13 @@
-function [label_lists,ranked2] = create_ranked_lists(predictions, write)
+function [label_lists,ranked2, size_ones] = create_ranked_lists(predictions, write, voc_size)
 air_test = './data/airplanes_test/';
 car_test = './data/cars_test/';
 face_test = './data/faces_test/';
 motor_test = './data/motorbikes_test/';
 
-ranked_air = './ranked_lists/ranked_airplanes/';
-ranked_car = './ranked_lists/ranked_cars/';
-ranked_face = './ranked_lists/ranked_faces/';
-ranked_motor = './ranked_lists/ranked_motorbikes/';
+ranked_air = strcat('./ranked_lists_',int2str(voc_size),'/ranked_airplanes/');
+ranked_car = strcat('./ranked_lists_',int2str(voc_size),'/ranked_cars/');
+ranked_face = strcat('./ranked_lists_',int2str(voc_size),'/ranked_faces/');
+ranked_motor = strcat('./ranked_lists_',int2str(voc_size),'/ranked_motorbikes/');
 
 % get the filenames, same for every folder
 dirInfo = dir(air_test); 
@@ -63,22 +63,42 @@ label_lists(4,1:50) = list2(151:200);
 label_lists(4,51:end) = list2(1:150);
 
 % create the ranked lists here
-ranked = cell(4,200);
-ranked2 = cell(4,200);
+%ranked = cell(4,200);
+%ranked2 = cell(4,200);
+size_ones = [];
 for i=1:size(predictions,1)
+    % sort them and create the ranked2 list which is for 
+    % quantitave the evaluation
     [sort_pred,idx] = sort(predictions(i,:), 'descend');
-    ranked(i,:) = list(idx);
     ranked2(i,:) = list2(idx);
+    % get only the positive predictions for the qualitative 
+    % evaluation (writing the ranked images)
+    idx2 = find(predictions(i,:) == 1);
+    ranked(i,1:length(list(idx2))) = list(idx2);
+    size_ones = [size_ones;length(list(idx2))];
     if write == 1
-        for j=1:size(ranked,2)
+        for j=1:length(list(idx2))%size(ranked,2)
             im = imread(ranked{i,j});
             if i == 1
+                % delete the previous rankings first
+                if j == 1
+                    delete(strcat(ranked_air,'*'))
+                end
                 imwrite(im, strcat(ranked_air,int2str(j)),'JPEG');
             elseif i == 2
+                if j == 1
+                    delete(strcat(ranked_car,'*'))
+                end
                 imwrite(im, strcat(ranked_car,int2str(j)),'JPEG');
             elseif i == 3
+                if j == 1
+                    delete(strcat(ranked_face,'*'))
+                end
                 imwrite(im, strcat(ranked_face,int2str(j)),'JPEG');
             elseif i == 4
+                if j == 1
+                    delete(strcat(ranked_motor,'*'))
+                end
                 imwrite(im, strcat(ranked_motor,int2str(j)),'JPEG');
             end
         end

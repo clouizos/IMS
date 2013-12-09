@@ -1,5 +1,6 @@
 function svmstruct_all = svm_train(features)
 
+addpath('./libsvm-3.17/matlab')
 %feat_ = load(feature_path);
 %features = feat_.features;
 
@@ -34,8 +35,8 @@ for i=1:4
 %     end
 %     cvErr = sum(err)/sum(CV.TestSize)
         
-    svmstruct_all{i} = svmtrain(features,labels, 'autoscale', false, 'method', 'QP', 'kernel_function','rbf', 'rbf_sigma', 1);
-   
+    svmstruct_all{i} = svmtrain(labels,features, '-s 0 -t 0 -b 1');
+    
 end
 disp('training finished...')
 

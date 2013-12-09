@@ -14,6 +14,27 @@ elseif voc_size == 400
 
     feat_t_ = load('features_test_400.mat');
     features_test = feat_t_.features;
+elseif voc_size == 1600
+    s = 'features_1600.mat';
+    feature_train_ = load(s);
+    features_train = feature_train_.features;
+
+    feat_t_ = load('features_test_1600.mat');
+    features_test = feat_t_.features;
+elseif voc_size == 2000
+    s = 'features_2000.mat';
+    feature_train_ = load(s);
+    features_train = feature_train_.features;
+
+    feat_t_ = load('features_test_2000.mat');
+    features_test = feat_t_.features;
+elseif voc_size == 4000
+    s = 'features_4000.mat';
+    feature_train_ = load(s);
+    features_train = feature_train_.features;
+
+    feat_t_ = load('features_test_4000.mat');
+    features_test = feat_t_.features;
 end
 svmstruct_all = svm_train(features_train);
 fprintf('\n')
@@ -25,8 +46,11 @@ for i=1:4
     labels = -ones(1,size(features_test,1))';
     labels((i-1)*50 + 1:(i-1)*50 + 50) = 1;
     
-    predictions(i,:) = svmclassify(svmstruct_all{i},features_test)';
-    
+    %predictions(i,:) = svmpredict(labels,features_test,svmstruct_all{i}, '-b')';
+    [predictions(i,:),accuracy,prob_est] = svmpredict(labels,features_test,svmstruct_all{i}, '-b 1');
+    predictions(i,:)
+    accuracy
+    prob_est
     % find positive and negative examples and find
     % precision, recall, fmeasure and accuracy
 %     pos = find(labels == 1);
@@ -69,8 +93,8 @@ end
 disp('finished the classification. Writing the ranked images...')
 fprintf('\n')
 % create the ranked lists
-[labels_list, ranked_list] = create_ranked_lists(predictions, 1);
-
-evaluate_class(labels_list, ranked_list, 200);
+[labels_list, ranked_list, size_ones] = create_ranked_lists(predictions, 1, voc_size);
+size_ones
+evaluate_class(labels_list, ranked_list, size_ones);
 
 end

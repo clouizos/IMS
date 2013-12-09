@@ -65,8 +65,16 @@ for i=1:sample_images
     D = [D; D_air';D_car';D_face';D_motor'];
 end
 size(D)
+
+% disp('Finished parsing the descriptors. Starting MoG...')
+% [means,cov,prior] = vl_gmm(double(D'),voc_size, 'verbose');
+% voc = means;
+% size(voc)
+% obj = gmdistribution.fit(double(D),voc_size);
+% voc = obj.mu;
+
 disp('Finished parsing the descriptors. Starting k-means...')
-[voc, A] = vl_kmeans(double(D'),voc_size,'verbose', 'algorithm','elkan');
+[voc, A] = vl_kmeans(double(D'),voc_size,'verbose', 'algorithm','ann','MaxNumIterations', 100);
 size(voc)
 
 % save the vocabulary in a .mat file

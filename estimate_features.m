@@ -6,6 +6,12 @@ if voc_size == 400
     voc_ = load('visual_vocabulary_1000_400.mat');
 elseif voc_size == 800
     voc_ = load('visual_vocabulary_1000_800.mat');
+elseif voc_size == 1600
+    voc_ = load('visual_vocabulary_1000_1600.mat');
+elseif voc_size == 2000
+    voc_ = load('visual_vocabulary_1000_2000.mat');
+elseif voc_size == 4000
+    voc_ = load('visual_vocabulary_1000_4000.mat');
 end
 % voc has integers here, need to investigate
 voc = voc_.voc';
