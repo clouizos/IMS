@@ -41,16 +41,23 @@ fprintf('\n')
 disp('Starting testing... ')
 % for each binary classifier
 predictions = zeros(4,200);
+prob_estimates = cell(1,4);
 for i=1:4
     % adjust the labels accordingly
     labels = -ones(1,size(features_test,1))';
     labels((i-1)*50 + 1:(i-1)*50 + 50) = 1;
     
     %predictions(i,:) = svmpredict(labels,features_test,svmstruct_all{i}, '-b')';
-    [predictions(i,:),accuracy,prob_est] = svmpredict(labels,features_test,svmstruct_all{i}, '-b 1');
-    predictions(i,:)
-    accuracy
-    prob_est
+    [predict,accuracy,prob_est] = svmpredict(labels,features_test,svmstruct_all{i}, '-b 1');
+    %predictions(i,:) = predict;
+    predictions(i,:) = prob_est(:,1)';
+%     accuracy;
+%     idx_pred = find(predict == 1);
+%     labels_idx = labels(idx_pred);
+%     prob_estimates{1,1} = prob_est(find(predict == 1)); 
+%     prob_estimates{1,1};
+    
+    
     % find positive and negative examples and find
     % precision, recall, fmeasure and accuracy
 %     pos = find(labels == 1);
@@ -66,7 +73,7 @@ for i=1:4
 %     false_neg = length(intersect(neg_p, pos));
 
     % use matlab builtin confusionmat instead
-    CM = confusionmat(labels', predictions(i,:)');
+    CM = confusionmat(labels', predict');
     
 
     if i == 1
@@ -93,8 +100,8 @@ end
 disp('finished the classification. Writing the ranked images...')
 fprintf('\n')
 % create the ranked lists
-[labels_list, ranked_list, size_ones] = create_ranked_lists(predictions, 1, voc_size);
+[ranked_list, size_ones] = create_ranked_lists(predictions, 1, voc_size);
 size_ones
-evaluate_class(labels_list, ranked_list, size_ones);
+evaluate_class(ranked_list, size_ones);
 
 end
