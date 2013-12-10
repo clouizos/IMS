@@ -50,7 +50,7 @@ end
 for i=ii
     count
     % airplane
-    if ~strcmp(type_s, 'RGB') && ~strcmp(type_s, 'rgb') && ~strcmp(type_s, 'opponent')
+    if ~strcmp(type_s, 'RGB') && ~strcmp(type_s, 'rgb') && ~strcmp(type_s, 'opponent') && ~strcmp(type_s, 'hsv')
         im_air = imread(strcat(air_train,files{i}));
         if size(im_air,3) == 3 
             im_air = im2single(rgb2gray(im_air));
@@ -83,7 +83,7 @@ for i=ii
     count
     % car
     try
-        if ~strcmp(type_s, 'RGB') && ~strcmp(type_s, 'rgb') && ~strcmp(type_s, 'opponent')
+        if ~strcmp(type_s, 'RGB') && ~strcmp(type_s, 'rgb') && ~strcmp(type_s, 'opponent')&& ~strcmp(type_s, 'hsv')
             im_car = imread(strcat(car_train,files{i}));
             if size(im_car,3) == 3 
                 im_car = im2single(rgb2gray(im_car));
@@ -119,7 +119,7 @@ for i=ii
     count
     % face
     try
-        if ~strcmp(type_s, 'RGB') && ~strcmp(type_s, 'rgb') && ~strcmp(type_s, 'opponent')
+        if ~strcmp(type_s, 'RGB') && ~strcmp(type_s, 'rgb') && ~strcmp(type_s, 'opponent')&& ~strcmp(type_s, 'hsv')
             im_face = imread(strcat(face_train,files{i}));
             if size(im_face,3) == 3 
                 im_face = im2single(rgb2gray(im_face));
@@ -154,7 +154,7 @@ disp('finished for faces.')
 for i=ii
     count
     % motorbike
-    if ~strcmp(type_s, 'RGB') && ~strcmp(type_s, 'rgb') && ~strcmp(type_s, 'opponent')
+    if ~strcmp(type_s, 'RGB') && ~strcmp(type_s, 'rgb') && ~strcmp(type_s, 'opponent')&& ~strcmp(type_s, 'hsv')
         im_motor = imread(strcat(motor_train,files{i}));
         if size(im_motor,3) == 3 
             im_motor = im2single(rgb2gray(im_motor));
@@ -195,26 +195,5 @@ else
     save(s,'features');
 end
 
-
-
-% im = im2single(rgb2gray(imread('./data/cars_train/img100.jpg')));
-% % find the sift descriptor
-% [F,D] = vl_sift(im);
-% size(voc)
-% % estimate the features from the vocabulary
-% [d,I] = pdist2(voc, double(D'), 'euclidean', 'Smallest', 1);
-% 
-% features_im = voc(I,:);
-% size(features_im)
-% I;
-% [elems, cent] = hist(I,size(voc,1));
-% size(elems(1,:))
-% figure(1)
-% %features_im = elems/trapz(cent,elems);
-% bar(cent,elems)
-% size(features_im);
-% figure(2)
-% dx = diff(cent(1:2));
-% bar(cent,elems/sum(elems*dx));
 
 end

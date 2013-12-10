@@ -20,7 +20,7 @@ D = [];
 for i=1:sample_images
     i
     % airplane
-    if ~strcmp(type, 'RGB') && ~strcmp(type, 'rgb') && ~strcmp(type, 'opponent')
+    if ~strcmp(type, 'RGB') && ~strcmp(type, 'rgb') && ~strcmp(type, 'opponent') && ~strcmp(type, 'hsv')
         im_air = imread(strcat(air_train,files{i}));
         if size(im_air,3) == 3 
             im_air = im2single(rgb2gray(im_air));
@@ -40,7 +40,7 @@ for i=1:sample_images
     end
     
     % car
-    if ~strcmp(type, 'RGB') && ~strcmp(type, 'rgb') && ~strcmp(type, 'opponent')
+    if ~strcmp(type, 'RGB') && ~strcmp(type, 'rgb') && ~strcmp(type, 'opponent') && ~strcmp(type, 'hsv')
         im_car = imread(strcat(car_train,files{i}));
         if size(im_car,3) == 3 
             im_car = im2single(rgb2gray(im_car));
@@ -59,7 +59,7 @@ for i=1:sample_images
     end
     
     % face
-    if ~strcmp(type, 'RGB') && ~strcmp(type, 'rgb') && ~strcmp(type, 'opponent')
+    if ~strcmp(type, 'RGB') && ~strcmp(type, 'rgb') && ~strcmp(type, 'opponent') && ~strcmp(type, 'hsv')
         im_face = imread(strcat(face_train,files{i}));
         if size(im_face,3) == 3 
             im_face = im2single(rgb2gray(im_face));
@@ -78,7 +78,7 @@ for i=1:sample_images
     end
     
     % motorbike
-    if ~strcmp(type, 'RGB') && ~strcmp(type, 'rgb') && ~strcmp(type, 'opponent')
+    if ~strcmp(type, 'RGB') && ~strcmp(type, 'rgb') && ~strcmp(type, 'opponent') && ~strcmp(type, 'hsv')
         im_motor = imread(strcat(motor_train,files{i}));
         if size(im_motor,3) == 3 
             im_motor = im2single(rgb2gray(im_motor));

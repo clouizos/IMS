@@ -1,4 +1,4 @@
-function svm_classify(voc_size,type)
+function svm_classify(voc_size,type, kernel)
 
 s = strcat('features_',int2str(voc_size),'_',type,'.mat');
 s2 = strcat('features_test_',int2str(voc_size),'_',type,'.mat');
@@ -7,12 +7,12 @@ features_train = feature_train_.features;
 feat_t_ = load(s2);
 features_test = feat_t_.features;
 
-svmstruct_all = svm_train(features_train, voc_size);
+svmstruct_all = svm_train(features_train, voc_size, kernel);
 fprintf('\n')
 disp('Starting testing... ')
 % for each binary classifier
 predictions = zeros(4,200);
-prob_estimates = cell(1,4);
+%prob_estimates = cell(1,4);
 for i=1:4
     % adjust the labels accordingly
     labels = -ones(1,size(features_test,1))';
@@ -72,7 +72,7 @@ disp('finished the classification. Writing the ranked images...')
 fprintf('\n')
 % create the ranked lists
 [ranked_list, size_ones] = create_ranked_lists(predictions, 1, voc_size);
-size_ones
+size_ones'
 evaluate_class(ranked_list, size_ones);
 
 end

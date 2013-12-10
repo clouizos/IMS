@@ -1,4 +1,4 @@
-function svmstruct_all = svm_train(features, voc_size)
+function svmstruct_all = svm_train(features, voc_size, kernel)
 
 addpath('./libsvm-3.17/matlab')
 %feat_ = load(feature_path);
@@ -83,15 +83,30 @@ for i=1:4
 % -wi weight: set the parameter C of class i to weight*C, for C-SVC (default 1)
 % -q : quiet mode    
     
-    % rbf: 0.9610, 'opponent'
-    %opts = '-s 0 -t 2 -g 2 -c 3 -b 1 -h 0 -q';
+    % rbf: 0.9610, 'opponent', 0.9630 'hsv'
+    if strcmp(kernel, 'rbf')
+        opts = '-s 0 -t 2 -g 3 -c 10 -b 1 -h 0 -q';
+    elseif strcmp(kernel, 'poly')
     % polynomial: 0.9613, 'opponent'
-    opts = '-s 0 -t 1 -g 2 -c 10 -r 1 -b 1 -d 3 -h 0 -e 0.0000001 -q';
+        opts = '-s 0 -t 1 -g 2 -c 10 -r 1 -d 3 -b 1 -h 0 -e 0.0000001 -q';
+    elseif strcmp(kernel, 'linear')
     % linear: 0.9426, 'opponent'
-    %opts = '-s 0 -t 0 -b 1 -q';
+        opts = '-s 0 -t 0 -b 1 -q';
+    elseif strcmp(kernel, 'sigmoid')
     % sigmoid: 0.7514, 'RGB'
-    %opts = '-s 0 -t 3 -g 2 -r 1 -b 1 -q';
-    svmstruct_all{i} = svmtrain(labels,features(:,1:end-1), opts);
+        opts = '-s 0 -t 3 -g 2 -r 1 -b 1 -q';
+    end
+    % cross validation doesn't work correctly yet
+    cv = 0;
+    if cv == 0
+        svmstruct_all{i} = svmtrain(labels,features(:,1:end-1), opts);
+    else
+        model = svmtrain(labels,features(:,1:end-1), [opts,'-v 10']);
+        params = model.Parameters;
+        opts = ['-s 0 -t 2 -g ',int2str(params(2)),' -c ',int2str(params(3)),...
+            ' -w1 ', int2str(params(4)), ' -w-1 ', int2str(params(5)), '-b 1 -h 0'];
+        svmstruct_all{i} = svmtrain(labels,features(:,1:end-1), opts);
+    end
     
 end
 disp('training finished...')
