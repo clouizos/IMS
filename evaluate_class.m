@@ -50,15 +50,16 @@ for i=1:size(ranked_list,1)%size(labels_list,1)
     count2 = 0;
     
 end
-mean_average_precision = mean(map)
+map_ = mean(map)
 close all;
 figure('name', 'Precision-Recall Graph')
 plot(rec{1,1},pre{1,1},'b',rec{1,2},pre{1,2},'r',rec{1,3},pre{1,3},...
     'g',rec{1,4},pre{1,4}, 'm');
 xlabel('Recall'); ylabel('Precision');
+s = ['Mean Average Precision: ',sprintf('%.4f', map_)];
+title(s);
 ylim([0 1.1]);xlim([0 0.99]);
 leg = legend('airplanes','cars','faces','motorbikes');
-rect = [0.25, 0.25, .25, .25];
-set(leg, 'Position', rect)
+set(leg, 'location', 'SouthEast')
 
 end
