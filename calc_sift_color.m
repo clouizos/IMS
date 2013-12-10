@@ -1,12 +1,17 @@
 function D = calc_sift_color(image_path, color)
-    if strcmp(color, 'RGB')
-        im = im2single(imread(image_path));
+    im_t = im2single(imread(image_path));
+    if strcmp(color, 'RGB') || size(im_t,3) == 1
+        im = im_t;
     else
         im = im2single(color_spaces(image_path,color,0));
     end
-   [Fr,Dr] = vl_sift(im(:,:,1));
-   [Fg,Dg] = vl_sift(im(:,:,2));
-   [Fb,Db] = vl_sift(im(:,:,3));
-   %Frgb = [Fr,Fg,Fb];
-   D = [Dr,Dg,Db];
+    if size(im,3) == 3
+        [Fr,Dr] = vl_sift(im(:,:,1));
+        [Fg,Dg] = vl_sift(im(:,:,2));
+        [Fb,Db] = vl_sift(im(:,:,3));
+        %Frgb = [Fr,Fg,Fb];
+        D = [Dr,Dg,Db];
+    else
+        [F,D] = vl_sift(im);
+    end
 end

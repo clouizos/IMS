@@ -58,5 +58,7 @@ plot(rec{1,1},pre{1,1},'b',rec{1,2},pre{1,2},'r',rec{1,3},pre{1,3},...
 xlabel('Recall'); ylabel('Precision');
 ylim([0 1.1]);xlim([0 0.99]);
 leg = legend('airplanes','cars','faces','motorbikes');
+rect = [0.25, 0.25, .25, .25];
+set(leg, 'Position', rect)
 
 end

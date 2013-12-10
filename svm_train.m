@@ -1,4 +1,4 @@
-function svmstruct_all = svm_train(features)
+function svmstruct_all = svm_train(features, voc_size)
 
 addpath('./libsvm-3.17/matlab')
 %feat_ = load(feature_path);
@@ -7,19 +7,37 @@ addpath('./libsvm-3.17/matlab')
 svmstruct_all = cell(4,1);
 
 for i=1:4
-    labels = -ones(1,size(features,1))';
+    %labels = -ones(1,size(features,1))';
+    labels = features(:,voc_size+1);
     % airplane
     if i == 1
-        labels(1:250) = 1;
+       labels(find(labels > 1)) = -1 ;
+       length(find(labels == 1))
+       length(find(labels == -1))
+       %labels(1:250) = 1;
     % cars   
     elseif i == 2
-        labels(251:465) = 1;
+        labels(find(labels > 2)) = -1;
+        labels(find(labels == 1)) = -1;
+        labels(find(labels == 2)) = 1;
+        length(find(labels == 1))
+        length(find(labels == -1))
+%         labels(251:465) = 1;
     % faces
     elseif i == 3
-        labels(466:615) = 1;
+        labels(find(labels < 3)) = -1;
+        labels(find(labels == 4)) = -1;
+        labels(find(labels == 3)) = 1;
+        length(find(labels == 1))
+        length(find(labels == -1))
+%         labels(466:615) = 1;
     % motorbikes
     else
-        labels(616:865) = 1;
+        labels(find(labels < 4)) = -1;
+        labels(find(labels == 4)) = 1;
+        length(find(labels == 1))
+        length(find(labels == -1))
+%         labels(616:865) = 1;
     end
     %labels((i-1)*50 + 1:(i-1)*50 + 50) = 1;
     s = ['training classifier ',int2str(i),'...' ];
@@ -64,8 +82,16 @@ for i=1:4
 % -b probability_estimates: whether to train a SVC or SVR model for probability estimates, 0 or 1 (default 0)
 % -wi weight: set the parameter C of class i to weight*C, for C-SVC (default 1)
 % -q : quiet mode    
-    opts = '-s 0 -t 2 -g 2 -c 2 -b 1 -q';
-    svmstruct_all{i} = svmtrain(labels,features, opts);
+    
+    % rbf: 0.9610, 'opponent'
+    %opts = '-s 0 -t 2 -g 2 -c 3 -b 1 -h 0 -q';
+    % polynomial: 0.9613, 'opponent'
+    opts = '-s 0 -t 1 -g 2 -c 10 -r 1 -b 1 -d 3 -h 0 -e 0.0000001 -q';
+    % linear: 0.9426, 'opponent'
+    %opts = '-s 0 -t 0 -b 1 -q';
+    % sigmoid: 0.7514, 'RGB'
+    %opts = '-s 0 -t 3 -g 2 -r 1 -b 1 -q';
+    svmstruct_all{i} = svmtrain(labels,features(:,1:end-1), opts);
     
 end
 disp('training finished...')

@@ -1,21 +1,13 @@
-function features = estimate_features(num_samples, type, voc_size, reg, vis)
+function features = estimate_features(num_samples, type, type_s, voc_size, voc_samples, reg, vis)
 close all;
 %voc_size = 400;
 % parse the vocabulary
-if nargin == 4
+if nargin == 6
     vis = 0;
 end
-if voc_size == 400
-    voc_ = load('visual_vocabulary_1000_400.mat');
-elseif voc_size == 800
-    voc_ = load('visual_vocabulary_1000_800.mat');
-elseif voc_size == 1600
-    voc_ = load('visual_vocabulary_1000_1600.mat');
-elseif voc_size == 2000
-    voc_ = load('visual_vocabulary_1000_2000.mat');
-elseif voc_size == 4000
-    voc_ = load('visual_vocabulary_1000_4000.mat');
-end
+
+s = strcat('visual_vocabulary_',int2str(voc_samples),'_',int2str(voc_size),'_',type_s,'.mat');
+voc_ = load(s);
 % voc has integers here, need to investigate
 voc = voc_.voc';
 if strcmp(type,'train')
@@ -44,7 +36,8 @@ end
 features = [];
 count = 1;
 if strcmp(type, 'train')
-    ii = 251:250+num_samples;
+    %ii = 251:250+num_samples;
+    ii = voc_samples/4 + 1:voc_samples/4 + num_samples;
 else
     ii = 1:num_samples;
 end
@@ -57,21 +50,31 @@ end
 for i=ii
     count
     % airplane
-    im_air = imread(strcat(air_train,files{i}));
-    if size(im_air,3) == 3 
-        im_air = im2single(rgb2gray(im_air));
+    if ~strcmp(type_s, 'RGB') && ~strcmp(type_s, 'rgb') && ~strcmp(type_s, 'opponent')
+        im_air = imread(strcat(air_train,files{i}));
+        if size(im_air,3) == 3 
+            im_air = im2single(rgb2gray(im_air));
+        else
+            im_air = im2single(im_air);
+        end
     else
-        im_air = im2single(im_air);
+        path = strcat(air_train,files{i});
     end
-    [F_air,D_air] = vl_sift(im_air);
+    if strcmp(type_s, 'intensity')
+        [F_air,D_air] = vl_sift(im_air);
+    elseif strcmp(type_s, 'dense')
+        [F_air, D_air] = vl_dsift(im_air);
+    else
+        D_air = calc_sift_color(path, type_s);
+    end
     % estimate the features from the vocabulary
     [d,I] = pdist2(voc, double(D_air'), 'euclidean', 'Smallest', 1);
     [elems, cent] = hist(I,voc_size);
-    %features(count,:) = elems/sum(sum(elems));
-    features(count,:) = elems/norm(elems,reg);
+    features(count,:) = [elems/norm(elems,reg) 1];
+    %features(count,:) = elems/norm(elems,reg);
     if vis == 1
         figure(1)
-        bar(cent, features(count,:))
+        bar(cent, features(count,1:end - 1))
     end
     count = count+1;
 end
@@ -80,20 +83,30 @@ for i=ii
     count
     % car
     try
-        im_car = imread(strcat(car_train,files{i}));
-        if size(im_car,3) == 3 
-            im_car = im2single(rgb2gray(im_car));
+        if ~strcmp(type_s, 'RGB') && ~strcmp(type_s, 'rgb') && ~strcmp(type_s, 'opponent')
+            im_car = imread(strcat(car_train,files{i}));
+            if size(im_car,3) == 3 
+                im_car = im2single(rgb2gray(im_car));
+            else
+                im_car = im2single(im_car);
+            end
         else
-            im_car = im2single(im_car);
+            path = strcat(car_train,files{i});
         end
-        [F_car,D_car] = vl_sift(im_car);
+        if strcmp(type_s,'intensity')
+            [F_car,D_car] = vl_sift(im_car);
+        elseif strcmp(type_s, 'dense')
+            [F_car, D_car] = vl_dsift(im_car);
+        else
+            D_car = calc_sift_color(path,type_s);
+        end
         [d,I] = pdist2(voc, double(D_car'), 'euclidean', 'Smallest', 1);
         [elems, cent] = hist(I,voc_size);
-        %features(count,:) = elems/sum(sum(elems));
-        features(count,:) = elems/norm(elems,reg);
+        features(count,:) = [elems/norm(elems,reg) 2];
+%         features(count,:) = elems/norm(elems,reg);
         if vis == 1
             figure(2)
-            bar(cent, features(count,:))
+            bar(cent, features(count,1:end - 1))
         end
         count = count+1;
     catch err
@@ -106,20 +119,30 @@ for i=ii
     count
     % face
     try
-        im_face = imread(strcat(face_train,files{i}));
-        if size(im_face,3) == 3 
-            im_face = im2single(rgb2gray(im_face));
+        if ~strcmp(type_s, 'RGB') && ~strcmp(type_s, 'rgb') && ~strcmp(type_s, 'opponent')
+            im_face = imread(strcat(face_train,files{i}));
+            if size(im_face,3) == 3 
+                im_face = im2single(rgb2gray(im_face));
+            else
+                im_face = im2single(im_face);
+            end
         else
-            im_face = im2single(im_face);
+            path = strcat(face_train, files{i});
         end
-        [F_face,D_face] = vl_sift(im_face);
+        if strcmp(type_s, 'intensity')
+            [F_face,D_face] = vl_sift(im_face);
+        elseif strcmp(type_s, 'dense');
+            [F_face, D_face] = vl_dsift(im_face);
+        else
+            D_face = calc_sift_color(path,type_s);
+        end
         [d,I] = pdist2(voc, double(D_face'), 'euclidean', 'Smallest', 1);
         [elems, cent] = hist(I,voc_size);
-        %features(count,:) = elems/sum(sum(elems));
-        features(count,:) = elems/norm(elems,reg);
+        features(count,:) = [elems/sum(elems,reg) 3];
+%         features(count,:) = elems/norm(elems,reg);
         if vis == 1
             figure(3)
-            bar(cent, features(count,:))
+            bar(cent, features(count,1:end - 1))
         end
         count = count+1;
     catch err
@@ -131,20 +154,30 @@ disp('finished for faces.')
 for i=ii
     count
     % motorbike
-    im_motor = imread(strcat(motor_train,files{i}));
-    if size(im_motor,3) == 3 
-        im_motor = im2single(rgb2gray(im_motor));
+    if ~strcmp(type_s, 'RGB') && ~strcmp(type_s, 'rgb') && ~strcmp(type_s, 'opponent')
+        im_motor = imread(strcat(motor_train,files{i}));
+        if size(im_motor,3) == 3 
+            im_motor = im2single(rgb2gray(im_motor));
+        else
+            im_motor = im2single(im_motor);
+        end
     else
-        im_motor = im2single(im_motor);
+        path = strcat(motor_train,files{i});
     end
-    [F_motor,D_motor] = vl_sift(im_motor);
+    if strcmp(type_s, 'intensity')
+        [F_motor,D_motor] = vl_sift(im_motor);
+    elseif strcmp(type_s,'dense')
+        [F_motor,D_motor] = vl_dsift(im_motor);
+    else
+        D_motor = calc_sift_color(path,type_s);
+    end
     [d,I] = pdist2(voc, double(D_motor'), 'euclidean', 'Smallest', 1);
     [elems, cent] = hist(I,voc_size);
-%     features(count,:) = elems/sum(sum(elems));
-    features(count,:) = elems/norm(elems,reg);
+    features(count,:) = [elems/norm(elems,reg) 4];
+%     features(count,:) = elems/norm(elems,reg);
     if vis == 1
         figure(4)
-        bar(cent, features(count,:))
+        bar(cent, features(count,1:end - 1))
     end
 %     features(count,end + 1) = 4;
     count = count+1;
@@ -155,10 +188,10 @@ size(features)
 
 % save the features in a .mat file
 if strcmp(type, 'train')
-    s = strcat('features_',int2str(voc_size),'.mat');
+    s = strcat('features_',int2str(voc_size),'_',type_s,'.mat');
     save(s,'features');
 else
-    s = strcat('features_test_',int2str(voc_size),'.mat');
+    s = strcat('features_test_',int2str(voc_size),'_',type_s,'.mat');
     save(s,'features');
 end
 

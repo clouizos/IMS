@@ -1,42 +1,13 @@
-function svm_classify(voc_size)
+function svm_classify(voc_size,type)
 
-if voc_size == 800
-    s = 'features_800.mat';
-    feature_train_ = load(s);
-    features_train = feature_train_.features;
+s = strcat('features_',int2str(voc_size),'_',type,'.mat');
+s2 = strcat('features_test_',int2str(voc_size),'_',type,'.mat');
+feature_train_ = load(s);
+features_train = feature_train_.features;
+feat_t_ = load(s2);
+features_test = feat_t_.features;
 
-    feat_t_ = load('features_test_800.mat');
-    features_test = feat_t_.features;
-elseif voc_size == 400
-    s = 'features_400.mat';
-    feature_train_ = load(s);
-    features_train = feature_train_.features;
-
-    feat_t_ = load('features_test_400.mat');
-    features_test = feat_t_.features;
-elseif voc_size == 1600
-    s = 'features_1600.mat';
-    feature_train_ = load(s);
-    features_train = feature_train_.features;
-
-    feat_t_ = load('features_test_1600.mat');
-    features_test = feat_t_.features;
-elseif voc_size == 2000
-    s = 'features_2000.mat';
-    feature_train_ = load(s);
-    features_train = feature_train_.features;
-
-    feat_t_ = load('features_test_2000.mat');
-    features_test = feat_t_.features;
-elseif voc_size == 4000
-    s = 'features_4000.mat';
-    feature_train_ = load(s);
-    features_train = feature_train_.features;
-
-    feat_t_ = load('features_test_4000.mat');
-    features_test = feat_t_.features;
-end
-svmstruct_all = svm_train(features_train);
+svmstruct_all = svm_train(features_train, voc_size);
 fprintf('\n')
 disp('Starting testing... ')
 % for each binary classifier
@@ -48,7 +19,7 @@ for i=1:4
     labels((i-1)*50 + 1:(i-1)*50 + 50) = 1;
     
     %predictions(i,:) = svmpredict(labels,features_test,svmstruct_all{i}, '-b')';
-    [predict,accuracy,prob_est] = svmpredict(labels,features_test,svmstruct_all{i}, '-b 1');
+    [predict,accuracy,prob_est] = svmpredict(labels,features_test(:,1:end-1),svmstruct_all{i}, '-b 1');
     %predictions(i,:) = predict;
     predictions(i,:) = prob_est(:,1)';
 %     accuracy;
