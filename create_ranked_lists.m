@@ -1,4 +1,4 @@
-function [ranked2, size_ones] = create_ranked_lists(predictions, write, voc_size)
+function [ranked2, size_ones] = create_ranked_lists(predictions, write, voc_size, voc_samples, type, kernel)
 air_test = './data/airplanes_test/';
 car_test = './data/cars_test/';
 face_test = './data/faces_test/';
@@ -91,26 +91,40 @@ for i=1:size(predictions,1)
         for j=1:length(list(idx__))%size(ranked,2)
             %im = imread(ranked{i,j});
             im = imread(ranked{j});
+            iml = ranked{j};      %# A string
+% fid = fopen(fName,'w');            %# Open the file
+% if fid ~= -1
+%   fprintf(fid,'%s\r\n',str);       %# Print the string
+%   fclose(fid);                     %# Close the file
+% end
             if i == 1
                 % delete the previous rankings first
                 if j == 1
                     delete(strcat(ranked_air,'*'))
+                    fid1 = fopen(strcat('./ranked_lists_all/ranked_list_airplane_',int2str(voc_size),'_', int2str(voc_samples),'_', type,'_', kernel, '.txt'), 'w');
                 end
+                fprintf(fid1,'%s\n' ,iml);
                 imwrite(im, strcat(ranked_air,int2str(j)),'JPEG');
             elseif i == 2
                 if j == 1
                     delete(strcat(ranked_car,'*'))
+                    fid2 = fopen(strcat('./ranked_lists_all/ranked_list_car_',int2str(voc_size),'_', int2str(voc_samples),'_', type,'_', kernel,'.txt'), 'w');
                 end
+                fprintf(fid2,'%s\n' ,iml);
                 imwrite(im, strcat(ranked_car,int2str(j)),'JPEG');
             elseif i == 3
                 if j == 1
                     delete(strcat(ranked_face,'*'))
+                    fid3 = fopen(strcat('./ranked_lists_all/ranked_list_face_',int2str(voc_size),'_', int2str(voc_samples),'_', type,'_', kernel,'.txt'), 'w');
                 end
+                fprintf(fid3,'%s\n' ,iml);
                 imwrite(im, strcat(ranked_face,int2str(j)),'JPEG');
             elseif i == 4
                 if j == 1
                     delete(strcat(ranked_motor,'*'))
+                    fid4 = fopen(strcat('./ranked_lists_all/ranked_list_motorbike_',int2str(voc_size),'_', int2str(voc_samples),'_', type,'_', kernel,'.txt'), 'w');
                 end
+                fprintf(fid4,'%s\n' ,iml);
                 imwrite(im, strcat(ranked_motor,int2str(j)),'JPEG');
             end
         end

@@ -80,8 +80,8 @@ end
 disp('finished the classification. Writing the ranked images...')
 fprintf('\n')
 % create the ranked lists
-[ranked_list, size_ones] = create_ranked_lists(predictions, 1, voc_size);
+[ranked_list, size_ones] = create_ranked_lists(predictions, 1, voc_size, voc_samples,type, kernel);
 size_ones'
-evaluate_class(ranked_list, size_ones);
+evaluate_class(ranked_list, size_ones,voc_size, voc_samples,type, kernel);
 
 end
