@@ -16,6 +16,9 @@ features_train = feature_train_.features;
 feat_t_ = load(s2);
 features_test = feat_t_.features;
 
+% nan values = 0 (for example rgb color space can return nan values (r=g=b=0))
+features_test(isnan(features_test)) = 0;
+
 svmstruct_all = svm_train(features_train, voc_size, kernel);
 fprintf('\n')
 disp('Starting testing... ')

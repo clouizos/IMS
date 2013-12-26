@@ -14,6 +14,9 @@ addpath('./libsvm-3.17/matlab')
 
 svmstruct_all = cell(4,1);
 
+% turn all nan values to 0
+features(isnan(features)) = 0;
+
 for i=1:4
     %labels = -ones(1,size(features,1))';
     labels = features(:,voc_size+1);
