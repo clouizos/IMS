@@ -3,7 +3,7 @@ function create_vocabulary(sample_images, voc_size, type)
 % Arguments:
 %     sample_images: how many images to use in order to create it
 %     voc_size: how many visual words 
-%     type: 'intensity', 'rgb', 'RGB', 'opponent', 'hsv'
+%     type: 'dense', 'intensity', 'rgb', 'RGB', 'opponent', 'hsv'
 
 % training sets
 air_train = './data/airplanes_train/';
@@ -39,7 +39,7 @@ for i=1:sample_images
     if strcmp(type, 'intensity')
         [F_air,D_air] = vl_sift(im_air);
     elseif strcmp(type, 'dense')
-        [F_air, D_air] = vl_dsift(im_air);
+        [F_air, D_air] = vl_dsift(im_air, 'Step', 6);
     else
         D_air = calc_sift_color(path, type);
     end
@@ -58,7 +58,7 @@ for i=1:sample_images
     if strcmp(type, 'intensity')
         [F_car,D_car] = vl_sift(im_car);
     elseif strcmp(type, 'dense')
-        [F_car, D_car] = vl_dsift(im_car);
+        [F_car, D_car] = vl_dsift(im_car, 'Step', 6);
     else
         D_car = calc_sift_color(path,type);
     end
@@ -77,7 +77,7 @@ for i=1:sample_images
     if strcmp(type, 'intensity')
         [F_face,D_face] = vl_sift(im_face);
     elseif strcmp(type, 'dense')
-        [F_face,D_face] = vl_dsift(im_face);
+        [F_face,D_face] = vl_dsift(im_face, 'Step', 6);
     else
         D_face = calc_sift_color(path, type);
     end
@@ -96,7 +96,7 @@ for i=1:sample_images
     if strcmp(type, 'intensity')
         [F_motor,D_motor] = vl_sift(im_motor);
     elseif strcmp(type, 'dense')
-        [F_motor,D_motor] = vl_sift(im_motor);
+        [F_motor,D_motor] = vl_dsift(im_motor, 'Step', 6);
     else
         D_motor = calc_sift_color(path, type);
     end
