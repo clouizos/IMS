@@ -3,8 +3,9 @@ function features = estimate_features(num_samples, type, type_s, voc_size, voc_s
 % Arguments:
 %     num_samples: how many samples do you wanna transform to features
 %     type: 'train' or 'test'
-%     type_s: 'intensity', 'rgb', 'RGB', 'opponent', 'hsv'
+%     type_s: 'intensity', 'rgb', 'RGB', 'opponent', 'hsv', 'dense'
 %     voc_size: size of the vocabulary to read
+%     voc_samples: samples used for the vocabulary
 %     reg: rank of the regularizing norm, (usually = 2)
 %     vis: Choose if you want to visualize the histograms for each image
 %          (default off)

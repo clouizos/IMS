@@ -56,7 +56,7 @@ for i=1:size(ranked_list,1)%size(labels_list,1)
     
 end
 map_ = mean(map)
-fname = strcat('./evaluation_results/AP_MAP_',int2str(voc_size),'_', int2str(voc_samples), '_',type,'_', kernel,'.txt');
+fname = strcat('./evaluation_results/Precision_results/AP_MAP_',int2str(voc_size),'_', int2str(voc_samples), '_',type,'_', kernel,'.txt');
 fid = fopen(fname, 'w');
 fprintf(fid,'Average Precision per class:\r\n');
 fprintf(fid,'Airplanes:\t%.4f\nCars:\t%.4f\nFaces:\t%.4f\nMotorbikes:\t%.4f\n\n',map(1),map(2),map(3),map(4));
@@ -64,7 +64,7 @@ fprintf(fid,'Mean Average Precision: %.4f\r\n', map_);
 fclose(fid);
 
 close all;
-figure('name', 'Precision-Recall Graph')
+h = figure('name', 'Precision-Recall Graph');
 plot(rec{1,1},pre{1,1},'b',rec{1,2},pre{1,2},'r',rec{1,3},pre{1,3},...
     'g',rec{1,4},pre{1,4}, 'm');
 xlabel('Recall'); ylabel('Precision');
@@ -73,5 +73,7 @@ title(s);
 ylim([0 1.1]);xlim([0 1.05]);
 leg = legend('airplanes','cars','faces','motorbikes');
 set(leg, 'location', 'SouthEast')
+filename = strcat('./evaluation_results/PR_curves/curve_',int2str(voc_size),'_', int2str(voc_samples), '_',type,'_', kernel,'.jpg');
+print(h, '-djpeg', filename);
 
 end
