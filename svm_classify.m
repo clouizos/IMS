@@ -1,7 +1,16 @@
-function svm_classify(voc_size,type, kernel)
+function svm_classify(voc_size,voc_samples,type, kernel)
+% Classifying according to an SVM
+% 
+% Arguments needed:
+%     voc_size: size of the vocabulary
+%     voc_samples: samples that were used in order to create the vocabulary
+%     type: 
+%         possible choices: 'intensity', 'rgb', 'RGB', 'opponent', 'hsv'
+%     kernel
+%         possible choices: 'rbf', 'poly', 'linear', 'sigmoid'
 
-s = strcat('features_',int2str(voc_size),'_',type,'.mat');
-s2 = strcat('features_test_',int2str(voc_size),'_',type,'.mat');
+s = strcat('./features/features_',int2str(voc_size),'_',int2str(voc_samples),'_',type,'.mat');
+s2 = strcat('./features/features_test_',int2str(voc_size),'_',int2str(voc_samples),'_',type,'.mat');
 feature_train_ = load(s);
 features_train = feature_train_.features;
 feat_t_ = load(s2);

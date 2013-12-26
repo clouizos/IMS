@@ -1,4 +1,9 @@
 function D = calc_sift_color(image_path, color)
+% Function to calculate a given color space SIFT descriptor
+% Arguments:
+%     image_path
+%     color: 'RGB', 'rgb', 'opponent', 'hsv'
+
     im_t = im2single(imread(image_path));
     if strcmp(color, 'RGB') || size(im_t,3) == 1
         im = im_t;

@@ -1,4 +1,9 @@
 function create_vocabulary(sample_images, voc_size, type)
+% Function to create the vocabulary
+% Arguments:
+%     sample_images: how many images to use in order to create it
+%     voc_size: how many visual words 
+%     type: 'intensity', 'rgb', 'RGB', 'opponent', 'hsv'
 
 % training sets
 air_train = './data/airplanes_train/';
@@ -31,7 +36,7 @@ for i=1:sample_images
         path = strcat(air_train,files{i});
     end
    
-    if strcmp(type, 'interest')
+    if strcmp(type, 'intensity')
         [F_air,D_air] = vl_sift(im_air);
     elseif strcmp(type, 'dense')
         [F_air, D_air] = vl_dsift(im_air);
@@ -50,7 +55,7 @@ for i=1:sample_images
     else
         path = strcat(car_train,files{i});
     end
-    if strcmp(type, 'interest')
+    if strcmp(type, 'intensity')
         [F_car,D_car] = vl_sift(im_car);
     elseif strcmp(type, 'dense')
         [F_car, D_car] = vl_dsift(im_car);
@@ -69,7 +74,7 @@ for i=1:sample_images
     else
         path = strcat(face_train, files{i});
     end
-    if strcmp(type, 'interest')
+    if strcmp(type, 'intensity')
         [F_face,D_face] = vl_sift(im_face);
     elseif strcmp(type, 'dense')
         [F_face,D_face] = vl_dsift(im_face);
@@ -88,7 +93,7 @@ for i=1:sample_images
     else
         path = strcat(motor_train, files{i});
     end
-    if strcmp(type, 'interest')
+    if strcmp(type, 'intensity')
         [F_motor,D_motor] = vl_sift(im_motor);
     elseif strcmp(type, 'dense')
         [F_motor,D_motor] = vl_sift(im_motor);
@@ -112,7 +117,7 @@ disp('Finished parsing the descriptors. Starting k-means...')
 size(voc)
 
 % save the vocabulary in a .mat file
-s = strcat('visual_vocabulary_',int2str(sample_images*4),'_',int2str(voc_size),'_',type,'.mat');
+s = strcat('./vocabularies/visual_vocabulary_',int2str(sample_images*4),'_',int2str(voc_size),'_',type,'.mat');
 save(s,'voc');
 
 end

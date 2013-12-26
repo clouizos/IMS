@@ -1,4 +1,14 @@
 function features = estimate_features(num_samples, type, type_s, voc_size, voc_samples, reg, vis)
+% Function to estimate the features given a vocabulary
+% Arguments:
+%     num_samples: how many samples do you wanna transform to features
+%     type: 'train' or 'test'
+%     type_s: 'intensity', 'rgb', 'RGB', 'opponent', 'hsv'
+%     voc_size: size of the vocabulary to read
+%     reg: rank of the regularizing norm, (usually = 2)
+%     vis: Choose if you want to visualize the histograms for each image
+%          (default off)
+
 close all;
 %voc_size = 400;
 % parse the vocabulary
@@ -6,7 +16,7 @@ if nargin == 6
     vis = 0;
 end
 
-s = strcat('visual_vocabulary_',int2str(voc_samples),'_',int2str(voc_size),'_',type_s,'.mat');
+s = strcat('./vocabularies/visual_vocabulary_',int2str(voc_samples),'_',int2str(voc_size),'_',type_s,'.mat');
 voc_ = load(s);
 % voc has integers here, need to investigate
 voc = voc_.voc';
@@ -183,15 +193,16 @@ for i=ii
     count = count+1;
   
 end
+disp('finished for motobikes.')
 
 size(features)
 
 % save the features in a .mat file
 if strcmp(type, 'train')
-    s = strcat('features_',int2str(voc_size),'_',type_s,'.mat');
+    s = strcat('./features/features_',int2str(voc_size),'_',int2str(voc_samples),'_',type_s,'.mat');
     save(s,'features');
 else
-    s = strcat('features_test_',int2str(voc_size),'_',type_s,'.mat');
+    s = strcat('./features/features_test_',int2str(voc_size),'_',int2str(voc_samples),'_',type_s,'.mat');
     save(s,'features');
 end
 

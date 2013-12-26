@@ -1,4 +1,9 @@
 function evaluate_class(ranked_list, size_eval)
+% Function to evaluate the classification and create precision-recall
+% graphs for each classifier
+% Arguments:
+%     ranked_list: result of the classifier
+%     size_eval: size of the returned list
 
 % pr curves for all classes
 % assume the returned set are all test images
@@ -58,7 +63,7 @@ plot(rec{1,1},pre{1,1},'b',rec{1,2},pre{1,2},'r',rec{1,3},pre{1,3},...
 xlabel('Recall'); ylabel('Precision');
 s = ['Mean Average Precision: ',sprintf('%.4f', map_)];
 title(s);
-ylim([0 1.1]);xlim([0 0.99]);
+ylim([0 1.1]);xlim([0 1.05]);
 leg = legend('airplanes','cars','faces','motorbikes');
 set(leg, 'location', 'SouthEast')
 

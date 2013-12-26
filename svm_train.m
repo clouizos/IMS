@@ -1,4 +1,12 @@
 function svmstruct_all = svm_train(features, voc_size, kernel)
+% 
+% Training an SVM
+% 
+% Arguments needed:
+% 
+%     features
+%     voc_size
+%     kernel: possible choices 'rbf', 'poly', 'linear', 'sigmoid'
 
 addpath('./libsvm-3.17/matlab')
 %feat_ = load(feature_path);
@@ -86,6 +94,7 @@ for i=1:4
     % rbf: 0.9610, 'opponent', 0.9630 'hsv'
     if strcmp(kernel, 'rbf')
         opts = '-s 0 -t 2 -g 3 -c 10 -b 1 -h 0 -q';
+        %opts = '-s 0 -t 2 -g 4 -c 10 -b 1 -h 0 -q';
     elseif strcmp(kernel, 'poly')
     % polynomial: 0.9613, 'opponent'
         opts = '-s 0 -t 1 -g 2 -c 10 -r 1 -d 3 -b 1 -h 0 -e 0.0000001 -q';
@@ -94,7 +103,7 @@ for i=1:4
         opts = '-s 0 -t 0 -b 1 -q';
     elseif strcmp(kernel, 'sigmoid')
     % sigmoid: 0.7514, 'RGB'
-        opts = '-s 0 -t 3 -g 2 -r 1 -b 1 -q';
+        opts = '-s 0 -t 3 -g 0.0078 -r 0 -b 1 -q';
     end
     % cross validation doesn't work correctly yet
     cv = 0;
