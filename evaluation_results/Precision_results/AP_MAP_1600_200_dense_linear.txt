@@ -1,0 +1,7 @@
+Average Precision per class:
+Airplanes:	0.9400
+Cars:	0.9984
+Faces:	1.0000
+Motorbikes:	0.8988
+
+Mean Average Precision: 0.9593
