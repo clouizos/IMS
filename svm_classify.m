@@ -31,7 +31,7 @@ for i=1:4
     labels((i-1)*50 + 1:(i-1)*50 + 50) = 1;
     
     %predictions(i,:) = svmpredict(labels,features_test,svmstruct_all{i}, '-b')';
-    [predict,accuracy,prob_est] = svmpredict(labels,features_test(:,1:end-1),svmstruct_all{i}, '-b 1');
+    [predict, accuracy, prob_est] = svmpredict(labels,features_test(:,1:end-1),svmstruct_all{i}, '-b 1');
     %predictions(i,:) = predict;
     predictions(i,:) = prob_est(:,1)';
 %     accuracy;

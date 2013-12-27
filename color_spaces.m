@@ -59,6 +59,11 @@ switch color_space
         g = double(G)./normalize;
         b = double(B)./normalize;
         
+        % check for instabilities where R=G=B=0
+        r(isnan(r)) = 0;
+        g(isnan(g)) = 0;
+        b(isnan(b)) = 0;
+        
         if show == 1
             r_ = figure;
             set(r_, 'name', 'r channel for rgb color space');

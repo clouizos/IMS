@@ -1,0 +1,6 @@
+create_vocabulary(50,1600,'hsv')
+create_vocabulary(50,1600,'rgb')
+create_vocabulary(50,1600,'RGB')
+create_vocabulary(50,1600,'opponent')
+create_vocabulary(50,1600,'intensity')
+create_vocabulary(50,1600,'dense')
